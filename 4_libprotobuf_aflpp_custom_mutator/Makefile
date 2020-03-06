@@ -1,6 +1,6 @@
 TARGET=lpm_aflpp_custom_mutator
 CXX=clang++-9
-AFLCC=afl-gcc
+AFLCC=$(HOME)/AFLplusplus/afl-gcc
 PB_SRC=test.pb.cc
 
 PROTOBUF_DIR=$(HOME)/libprotobuf-mutator/build/external.protobuf
