@@ -24,22 +24,47 @@ std::string ProtoToData(const TEST &test_proto) {
     return res;
 }
 
-extern "C" size_t afl_custom_mutator(uint8_t *data, size_t size, uint8_t *mutated_out, size_t max_size, unsigned int seed) {
-    static MyMutator mutator;
-    using protobuf_mutator::ParseTextMessage;
-    TEST input;
-
-    // For libprotobuf, it's best for input data to be a TEST message text (e.g. a: 100\nb: "fff")
-
+/*
+ * This method is called when AFL++ starts up and is used to seed RNG. ( optional )
+ */
+extern "C" void afl_custom_init(unsigned int seed) {
     srand(seed);
+}
+
+/**
+ * Perform custom mutations on a given input
+ *
+ * (Optional for now. Required in the future)
+ *
+ * @param[in] buf Input data to be mutated
+ * @param[in] buf_size Size of input data
+ * @param[in] add_buf Buffer containing the additional test case
+ * @param[in] add_buf_size Size of the additional test case
+ * @param[out] mutated_out Buffer to store the mutated input
+ * @param[in] max_size Maximum size of the mutated output. The mutation must not
+ *     produce data larger than max_size.
+ * @return Size of the mutated output.
+ */
+extern "C" size_t afl_custom_fuzz(uint8_t *buf, size_t buf_size, uint8_t *add_buf,size_t add_buf_size, uint8_t *mutated_out, size_t max_size) {
+    // This function can be named either "afl_custom_fuzz" or "afl_custom_mutator"
+    // A simple test shows that "buf" will be the content of the current test case
+    // "add_buf" will be the next test case ( from AFL++'s input queue )
+
+    // Here we implement our own custom mutator
+    static MyMutator mutator;
+    TEST input;
+    // mutate input.a ( integer )
     int id = rand() % 305;
     input.set_a(id);
+    // mutate input.b ( string )
     std::string tmp = "";
     std::string new_string = mutator.MutateString(tmp, 1000); // use the default protobuf mutator
     input.set_b(new_string);
+    // convert input from TEST to raw data, and copy to mutated_out
     const TEST *p = &input;
     std::string s = ProtoToData(*p); // convert TEST to raw data
-    memcpy(mutated_out, s.c_str(), s.size()); // copy data to output buffer
+    size_t copy_size = s.size() <= max_size ? s.size() : max_size; // check if raw data's size is larger than max_size
+    memcpy(mutated_out, s.c_str(), copy_size); // copy the mutated data
 
-    return s.size();
+    return copy_size;
 }
