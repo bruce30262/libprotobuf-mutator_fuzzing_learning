@@ -4,7 +4,6 @@ Learn how to combine libprotobuf-mutator with libfuzzer &amp; AFL++
 ## Environment Settings 
 * Ubuntu Linux 18.04 64 bit  
 * Clang 9.0.0  
-* AFL++ 2.59c  
 
 ### Install Clang/LLVM & libfuzzer  
 * Follow the step in [this article](https://linuxhint.com/install-llvm-ubuntu/) and add the toolchain's apt repository in Ubuntu.  
