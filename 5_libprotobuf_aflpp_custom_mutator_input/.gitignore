@@ -1,0 +1,5 @@
+*.o
+*.so
+vuln
+test_proto_serializer
+out/*
