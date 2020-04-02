@@ -5,15 +5,14 @@ PB_SRC=test.pb.cc
 
 PROTOBUF_DIR=$(HOME)/libprotobuf-mutator/build/external.protobuf
 LPM_DIR=$(HOME)/libprotobuf-mutator
-PROTOBUF_LIB=$(PROTOBUF_DIR)/lib/libprotobufd.a
-LPM_LIB=$(LPM_DIR)/build/src/libfuzzer/libprotobuf-mutator-libfuzzer.a $(LPM_DIR)/build/src/libprotobuf-mutator.a
+LPM_LIB=$(LPM_DIR)/build/src/libprotobuf-mutator.so
 INC=-I$(PROTOBUF_DIR)/include -I$(LPM_DIR)
 
 all: $(TARGET).so
 
 $(TARGET).so: $(TARGET).cc $(PB_SRC)
 	$(CXX) -fPIC -c $^ $(INC)
-	$(CXX) -shared -Wall -O3 -o $@ *.o -lprotobuf-mutator
+	$(CXX) -shared -Wall -O3 -o $@ *.o $(LPM_LIB)
 
 vuln: vuln.c
 	$(AFLCC) -o $@ $^
