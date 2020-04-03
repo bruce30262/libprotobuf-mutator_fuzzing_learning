@@ -1,8 +1,9 @@
 
 > Notice:  
-> AFL++'s custom mutator might be frequently updated. Make sure to check out its [document](https://github.com/vanhauser-thc/AFLplusplus/blob/master/docs/custom_mutators.md) for the latest changes. I'll try my best to follow the latest APIs of its custom mutator.
+> AFL++'s custom mutator might be frequently updated. Make sure to check out its [document](https://github.com/vanhauser-thc/AFLplusplus/blob/master/docs/custom_mutators.md) for the latest changes.  
+> I'll try my best to follow the latest APIs of its custom mutator.
 
-# Combine libprotobuf-mutator with AFL++ ( with input handling )
+# Handling input from AFL++ in our custom mutator
 
 ## Intro
 
@@ -29,7 +30,7 @@ Here in this example, it'll show you how to process the input data from AFL++, c
 
 ## Test the program  
 
-Unlike the one in [4_libprotobuf_aflpp_custom_mutator](https://github.com/bruce30262/libprotobuf-mutator_fuzzing_learning/blob/master/4_libprotobuf_aflpp_custom_mutator/Makefile#L16), the example uses the static library of `libprotobuf-mutator-libfuzzer` and `libprotobuf-mutator`. Make sure these two library is compiled with `-fPIC` flag. You can use the following `cmake` command to enable the option:  
+Unlike the one in [4_libprotobuf_aflpp_custom_mutator](https://github.com/bruce30262/libprotobuf-mutator_fuzzing_learning/blob/master/4_libprotobuf_aflpp_custom_mutator/Makefile#L15), the example uses the static library of `libprotobuf-mutator-libfuzzer` and `libprotobuf-mutator`. Make sure these two library is compiled with `-fPIC` flag. You can use the following `cmake` command to enable the option:  
 
 ```sh
 cmake .. -GNinja -DCMAKE_C_COMPILER=clang-9 \
