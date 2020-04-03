@@ -87,7 +87,14 @@ extern "C" size_t afl_custom_fuzz(void *data, // afl state
     // parse input data to TEST
     // Notice that input data should be a serialized protobuf data
     // Check ./in/ii and test_protobuf_serializer for more detail
-    input.ParseFromArray(buf, buf_size);
+    bool parse_ok = input.ParseFromArray(buf, buf_size);
+    if(!parse_ok) {
+        // Invalid serialize protobuf data. Don't mutate.
+        // Return a dummy buffer. Also mutated_size = 0
+        static uint8_t *dummy = new uint8_t[10]; // dummy buffer with no data
+        *out_buf = dummy;
+        return 0;
+    }
     // mutate the protobuf
     mutator.Mutate(&input, max_size);
     
