@@ -1,4 +1,3 @@
-#include "libprotobuf-mutator/src/text_format.h"
 #include "libprotobuf-mutator/src/mutator.h"
 #include "test.pb.h"
 
