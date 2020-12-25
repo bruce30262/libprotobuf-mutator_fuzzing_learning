@@ -1,4 +1,4 @@
-CXX=clang++-9
+CXX=clang++-11
 PB_SRC=test.pb.cc
 
 PROTOBUF_DIR=$(HOME)/libprotobuf-mutator/build/external.protobuf
