@@ -2,12 +2,12 @@
 Learn how to combine libprotobuf-mutator with libfuzzer &amp; AFL++  
 
 ## Environment Settings 
-* Ubuntu Linux 18.04 64 bit  
-* Clang 9.0.0  
+* Ubuntu Linux 20.04 64 bit  
+* Clang 11.0.1  
 
 ### Install Clang/LLVM & libfuzzer  
 * Follow the step in [this article](https://linuxhint.com/install-llvm-ubuntu/) and add the toolchain's apt repository in Ubuntu.  
-* `sudo apt-get install clang-9 libfuzzer-9-dev`  
+* `sudo apt-get install clang-11 libfuzzer-11-dev`  
 
 ### Install libprotobuf-mutator  
 Follow the step in [libprotobuf-mutator's readme](https://github.com/google/libprotobuf-mutator/blob/master/README.md)  
@@ -25,31 +25,39 @@ sudo apt-get install protobuf-compiler libprotobuf-dev binutils cmake \
 cd libprotobuf-mutator
 mkdir build
 cd build
-cmake .. -GNinja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=Debug -DLIB_PROTO_MUTATOR_DOWNLOAD_PROTOBUF=ON
-ninja check # test
-ninja # build
+( A cmake command, check the below section )
+ninja check # test, might took very long time
+ninja # just build, use this if you don't want to wait too long
 sudo ninja install # install
 ```
 > **Notice**  
 > Use the following cmake command to build `libprotobuf-mutator-libfuzzer.so.0` and `libprotobuf-mutator.so.0` shared library
 
 ```shell
- cmake .. -GNinja -DCMAKE_C_COMPILER=clang-9 \ 
- -DCMAKE_CXX_COMPILER=clang++-9 \ 
+ cmake .. -GNinja -DCMAKE_C_COMPILER=clang-11 \ 
+ -DCMAKE_CXX_COMPILER=clang++-11 \ 
  -DCMAKE_BUILD_TYPE=Debug \ 
  -DLIB_PROTO_MUTATOR_DOWNLOAD_PROTOBUF=ON \ 
  -DBUILD_SHARED_LIBS=ON
 ```
 
-> To build static library that can be linked into shared library, use the following `cmake` command:  
+> To build static libraries, use the following `cmake` command:  
+> ( **This will generate libraries that can be linked into shared libraries / normal program** )
 
 ```shell
-cmake .. -GNinja -DCMAKE_C_COMPILER=clang-9 \
--DCMAKE_CXX_COMPILER=clang++-9 \
+cmake .. -GNinja -DCMAKE_C_COMPILER=clang-11 \
+-DCMAKE_CXX_COMPILER=clang++-11 \
 -DCMAKE_BUILD_TYPE=Debug \
 -DLIB_PROTO_MUTATOR_DOWNLOAD_PROTOBUF=ON \
 -DCMAKE_C_FLAGS="-fPIC" -DCMAKE_CXX_FLAGS="-fPIC"
 ```
+## How to upgrade the environment  
+* Upgrade Clang/LLVM & libfuzzer ( install a new version ) 
+* Upgrade AFL++ ( git pull & rebuild )  
+* Upgrade libprotobuf-mutator ( git pull & rebuild )  
+    - Rebuild and re-install `libprotobuf-mutator-libfuzzer.so.0` and `libprotobuf-mutator.so.0`.  
+    - Rebuild `libprotobuf-mutator-libfuzzer.a` and `libprotobuf-mutator.a`.  
+* **Re-compile the protobuf with newer `protoc` and replace those `*.cc` & `*.h` with new ones.**
 
 ## Learning  
 * [Simple protobuf example](https://github.com/bruce30262/libprotobuf-mutator_fuzzing_learning/tree/master/1_simple_protobuf)  

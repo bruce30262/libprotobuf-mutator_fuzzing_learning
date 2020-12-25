@@ -1,5 +1,5 @@
 TARGET=lpm_libfuzz
-CXX=clang++-9
+CXX=clang++-11
 CXXFLAGS=-g -fsanitize=fuzzer,address
 PB_SRC=test.pb.cc
 

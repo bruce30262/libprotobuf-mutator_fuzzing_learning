@@ -18,7 +18,7 @@ mkdir genfiles
 protoc ./test.proto --cpp_out=./genfiles
 ```
 
-`protoc` can be found in `libprotobuf-mutator/build/external.protobuf/`  
+`protoc` can be found in `libprotobuf-mutator/build/external.protobuf/bin/`  
 
 This will create `test.pb.cc` and `test.pb.h` in the genfiles directory  
 
@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
 * Compile the program & test it
 
 ```makefile
-CXX=clang++-9
+CXX=clang++-11
 PB_SRC=test.pb.cc
 
 PROTOBUF_DIR=$(HOME)/libprotobuf-mutator/build/external.protobuf
