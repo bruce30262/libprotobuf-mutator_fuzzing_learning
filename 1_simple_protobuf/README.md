@@ -18,7 +18,7 @@ mkdir genfiles
 protoc ./test.proto --cpp_out=./genfiles
 ```
 
-`protoc` can be found in `libprotobuf-mutator/build/external.protobuf/`  
+`protoc` can be found in `libprotobuf-mutator/build/external.protobuf/bin/`  
 
 This will create `test.pb.cc` and `test.pb.h` in the genfiles directory  
 

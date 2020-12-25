@@ -16,5 +16,5 @@
 * It should generate a crash sample immediately  
     * The sample contains the crash data in protobuf format  
     * Set the `PROTO_FUZZER_DUMP_PATH` env to generate the crash sample in raw format  
-    * `test.b` should always be "FUCK" in the crash sample
+    * `test.b` should always be "FUCK" or "SHIT" in the crash sample
 
