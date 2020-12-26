@@ -35,9 +35,22 @@ std::string ProtoToData(const TEST &test_proto) {
  *         There may be multiple instances of this mutator in one afl-fuzz run!
  *         Return NULL on error.
  */
-extern "C" void *afl_custom_init(void *afl, unsigned int seed) {
+extern "C" MyMutator *afl_custom_init(void *afl, unsigned int seed) {
+    MyMutator *mutator = new MyMutator();
+    
+    mutator->RegisterPostProcessor(
+        TEST::descriptor(),
+        [](google::protobuf::Message* message, unsigned int seed) {
+            // libprotobuf-mutator's built-in mutator is kind of....crappy :P
+            // Even a dumb fuzz like `TEST.a = rand();` is better in this case... Q_Q
+            // We register a post processor to apply our dumb fuzz
+            
+            TEST *t = static_cast<TEST *>(message);
+            t->set_a(rand());
+        });
+
     srand(seed);
-    return afl;
+    return mutator;
 }
 
 /**
@@ -54,7 +67,7 @@ extern "C" void *afl_custom_init(void *afl, unsigned int seed) {
  *     produce data larger than max_size.
  * @return Size of the mutated output.
  */
-extern "C" size_t afl_custom_fuzz(void *data, // afl state
+extern "C" size_t afl_custom_fuzz(MyMutator *mutator, // return value from afl_custom_init
                        uint8_t *buf, size_t buf_size, // input data to be mutated
                        uint8_t **out_buf, // output buffer
                        uint8_t *add_buf, size_t add_buf_size,  // add_buf can be NULL
@@ -62,27 +75,7 @@ extern "C" size_t afl_custom_fuzz(void *data, // afl state
     // This function can be named either "afl_custom_fuzz" or "afl_custom_mutator"
     // A simple test shows that "buf" will be the content of the current test case
     // "add_buf" will be the next test case ( from AFL++'s input queue )
-
-    static MyMutator mutator;
-
-    mutator.RegisterPostProcessor(
-        TEST::descriptor(),
-        [](google::protobuf::Message* message, unsigned int seed) {
-            // libprotobuf-mutator's built-in mutator is kind of....crappy :P
-            // We register a post processor to make sure there's no duplicate "TEST.a" in our mutated protobuf
-
-            TEST *t = static_cast<TEST *>(message);
-            // Create a map to record the "a" value
-            static std::map<int, bool> mapA;
-            int cur_a = t->a();
-            // re-generate t.a till a value which did not be generated before
-            while(mapA[cur_a]) {
-                cur_a = rand();
-            }
-            t->set_a(cur_a);
-            mapA[cur_a] = true;
-        });
-
+    
     TEST input;
     // parse input data to TEST
     // Notice that input data should be a serialized protobuf data
@@ -96,7 +89,7 @@ extern "C" size_t afl_custom_fuzz(void *data, // afl state
         return 0;
     }
     // mutate the protobuf
-    mutator.Mutate(&input, max_size);
+    mutator->Mutate(&input, max_size);
     
     // Convert protobuf to raw data
     const TEST *p = &input;
