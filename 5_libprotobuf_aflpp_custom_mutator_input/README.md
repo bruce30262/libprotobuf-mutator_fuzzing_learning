@@ -18,7 +18,7 @@ Here in this example, it'll show you how to process the input data from AFL++, c
     - Register a `PostProcessor` so we can process the result of the mutation.
         + The mutator in libprotobuf-mutator is kind of simple, we'll have to use a PostProcessor to optimize its mutation, or else it's pretty hard to trigger the crash in our `vuln` program.
     - Convert the protobuf to raw data and return the result to AFL++.
-* `lpm_aflpp_custom_mutator.h`: Declare `afl_custom_fuzz` as a friend function so it can use protobuf's mutators.  
+* `lpm_aflpp_custom_mutator.h`: Declare our custom mutator.
 * `test_proto_serializer.cc`: A program used for generating the serialized `TEST` protobuf.  
     - In order to convert the input data to `TEST`, the input data **should be serialized first**.
 * `vuln.c`: Vulnerable C program.  
