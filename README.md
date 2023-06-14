@@ -78,4 +78,4 @@ A : The `test.pb.cc` and `test.pb.h` in this repo is generated with protoc `v3.1
 * [afl-libprotobuf-mutator](https://github.com/thebabush/afl-libprotobuf-mutator/)
 
 ## LICENSE  
-[![License: CC BY-NC-SA 4.0](https://licensebuttons.net/l/by-nc-sa/4.0/88x31.png)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+MIT
