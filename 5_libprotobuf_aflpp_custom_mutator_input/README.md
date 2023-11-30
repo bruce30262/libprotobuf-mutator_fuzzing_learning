@@ -29,12 +29,13 @@ Here in this example, it'll show you how to process the input data from AFL++, c
 * Modify `AFLCC` to the path of an AFL++'s compiler.  
 
 ## Test the program  
+**!! Make sure you compile the protobuf in `1_simple_protobuf` first ( goto `1_simple_protobuf` and `make proto`) !!.**  
 
-Unlike the one in [4_libprotobuf_aflpp_custom_mutator](https://github.com/bruce30262/libprotobuf-mutator_fuzzing_learning/blob/master/4_libprotobuf_aflpp_custom_mutator/Makefile#L15), the example uses the static library of `libprotobuf-mutator-libfuzzer` and `libprotobuf-mutator`. Make sure these two library is compiled with `-fPIC` flag. You can use the following `cmake` command to enable the option:  
+Unlike the one in [4_libprotobuf_aflpp_custom_mutator](https://github.com/bruce30262/libprotobuf-mutator_fuzzing_learning/blob/master/4_libprotobuf_aflpp_custom_mutator/Makefile), the example uses the static library of `libprotobuf-mutator`. Make sure this library is compiled with `-fPIC` flag. You can use the following `cmake` command to enable the option:  
 
 ```sh
-cmake .. -GNinja -DCMAKE_C_COMPILER=clang-11 \
--DCMAKE_CXX_COMPILER=clang++-11 \
+cmake .. -GNinja -DCMAKE_C_COMPILER=clang \
+-DCMAKE_CXX_COMPILER=clang++ \
 -DCMAKE_BUILD_TYPE=Debug \
 -DLIB_PROTO_MUTATOR_DOWNLOAD_PROTOBUF=ON \
 -DCMAKE_C_FLAGS="-fPIC" -DCMAKE_CXX_FLAGS="-fPIC"
