@@ -1,7 +1,11 @@
 TARGET=lpm_aflpp_custom_mutator
-CXX=clang++-11
+PB_SRC_DIR=../1_simple_protobuf/genfiles
+PB_SRC=$(PB_SRC_DIR)/test.pb.cc
+
+CXX=clang++-14
+CXXFLAGS=-I$(PB_SRC_DIR)
+
 AFLCC=$(HOME)/AFLplusplus/afl-gcc
-PB_SRC=test.pb.cc
 
 PROTOBUF_DIR=$(HOME)/libprotobuf-mutator/build/external.protobuf
 LPM_DIR=$(HOME)/libprotobuf-mutator
@@ -11,7 +15,7 @@ INC=-I$(PROTOBUF_DIR)/include -I$(LPM_DIR)
 all: $(TARGET).so
 
 $(TARGET).so: $(TARGET).cc $(PB_SRC)
-	$(CXX) -fPIC -c $^ $(INC)
+	$(CXX) $(CXXFLAGS) -fPIC -c $^ $(INC)
 	$(CXX) -shared -Wall -O3 -o $@ *.o $(LPM_LIB)
 
 vuln: vuln.c

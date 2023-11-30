@@ -35,9 +35,19 @@ std::string ProtoToData(const TEST &test_proto) {
  *         There may be multiple instances of this mutator in one afl-fuzz run!
  *         Return NULL on error.
  */
-extern "C" void *afl_custom_init(void *afl, unsigned int seed) {
+extern "C" custom_mutator_t *afl_custom_init(void *afl, unsigned int seed) {
+    custom_mutator_t *data = (custom_mutator_t *)calloc(1, sizeof(custom_mutator_t));
+    if (!data) {
+        perror("[mutator] [afl_custom_init] custom_mutator alloc failed");
+        return NULL;
+    }
+
+    data->seed = seed;
+    data->mutated_out_buf = (uint8_t*)calloc(1, 64); // Initial mutated_out buffer size is 64
+    data->mutated_out_buf_size = 64;
+
     srand(seed);
-    return afl;
+    return data;
 }
 
 /**
@@ -54,11 +64,11 @@ extern "C" void *afl_custom_init(void *afl, unsigned int seed) {
  *     produce data larger than max_size.
  * @return Size of the mutated output.
  */
-extern "C" size_t afl_custom_fuzz(void *data, // afl state
-                       uint8_t *buf, size_t buf_size, // input data to be mutated
-                       uint8_t **out_buf, // output buffer
-                       uint8_t *add_buf, size_t add_buf_size,  // add_buf can be NULL
-                       size_t max_size) {
+extern "C" size_t afl_custom_fuzz(custom_mutator_t *data, // custom mutator state
+        uint8_t *buf, size_t buf_size, // input data to be mutated
+        uint8_t **out_buf, // output buffer
+        uint8_t *add_buf, size_t add_buf_size,  // add_buf can be NULL
+        size_t max_size) {
 
     // This function can be named either "afl_custom_fuzz" or "afl_custom_mutator"
     // A simple test shows that "buf" will be the content of the current test case
@@ -71,17 +81,22 @@ extern "C" size_t afl_custom_fuzz(void *data, // afl state
     int id = rand() % 305;
     input.set_a(id);
     // mutate input.b ( string )
-    std::string tmp = "";
-    std::string new_string = mutator.MutateString(tmp, 1000); // use the default protobuf mutator
+    std::string new_string = mutator.MutateString("", 1000); // use the default protobuf mutator
     input.set_b(new_string);
     // convert input from TEST to raw data, and copy to mutated_out
-    const TEST *p = &input;
-    std::string s = ProtoToData(*p); // convert TEST to raw data
+    const TEST *tmp = &input;
+    std::string raw = ProtoToData(*tmp); // convert TEST to raw data
+    
+    size_t mutated_size = raw.size() <= max_size ? raw.size() : max_size; // check if raw data's size is larger than max_size
+    // Reallocate mutated_out buffer if needed
+    if(data->mutated_out_buf_size < mutated_size) {
+        data->mutated_out_buf = (uint8_t*)realloc(data->mutated_out_buf, mutated_size);
+        data->mutated_out_buf_size = mutated_size;
+    }
+
     // Copy the raw data to output buffer
-    size_t mutated_size = s.size() <= max_size ? s.size() : max_size; // check if raw data's size is larger than max_size
-    uint8_t *mutated_out = new uint8_t[mutated_size+1];
-    memcpy(mutated_out, s.c_str(), mutated_size);
-    *out_buf = mutated_out;
+    memcpy(data->mutated_out_buf, raw.c_str(), mutated_size);
+    *out_buf = data->mutated_out_buf;
 
     return mutated_size;
 }
@@ -91,8 +106,9 @@ extern "C" size_t afl_custom_fuzz(void *data, // afl state
  *
  * @param data The data ptr from afl_custom_init
  */
-extern "C" void afl_custom_deinit(void *data) {
-    // Honestly I don't know what I'm gonna do with this...
+extern "C" void afl_custom_deinit(custom_mutator_t *data) {
+    free(data->mutated_out_buf);
+    free(data);
     return;
 }
 
