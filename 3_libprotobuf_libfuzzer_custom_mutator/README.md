@@ -11,7 +11,7 @@
 * Use `-DLLVMFuzzerTestOneInput=XXX` to set the target fuzzing function name
 
 ## Test the program  
-
+* **!! Make sure you compile the protobuf in `1_simple_protobuf` first ( goto `1_simple_protobuf` and `make proto`) !!**.
 * `make` && `./lpm_libfuzz_custom_mutator`
 * It should generate a crash sample immediately  
     * The sample contains the crash data in protobuf format  

@@ -1,7 +1,9 @@
 TARGET=lpm_libfuzz
-CXX=clang++-11
-CXXFLAGS=-g -fsanitize=fuzzer,address
-PB_SRC=test.pb.cc
+PB_SRC_DIR=../1_simple_protobuf/genfiles
+PB_SRC=$(PB_SRC_DIR)/test.pb.cc
+
+CXX=clang++-14
+CXXFLAGS=-g -fsanitize=fuzzer,address -I$(PB_SRC_DIR)
 
 PROTOBUF_DIR=$(HOME)/libprotobuf-mutator/build/external.protobuf
 LPM_DIR=$(HOME)/libprotobuf-mutator
