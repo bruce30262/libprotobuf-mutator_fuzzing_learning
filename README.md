@@ -22,19 +22,18 @@ sudo apt-get install protobuf-compiler libprotobuf-dev binutils cmake \
   ninja-build liblzma-dev libz-dev pkg-config autoconf libtool
 ```
 
-#### Compile and test everything:
+#### Build the required libraries
 
 ```shell
 cd libprotobuf-mutator
 mkdir build
 cd build
 ( A cmake command, check the below section )
-ninja check # test, might took very long time
-ninja # just build, use this if you don't want to wait too long
-sudo ninja install # install
+ninja # build the libraries
+sudo ninja install # install the libraries
 ```
-> **Notice**  
-> Use the following cmake command to build `libprotobuf-mutator-libfuzzer.so.0` and `libprotobuf-mutator.so.0` shared library
+About `cmake` command :  
+* Use the following cmake command to build `libprotobuf-mutator-libfuzzer.so.0` and `libprotobuf-mutator.so.0` shared library :
 
 ```shell
  cmake .. -GNinja -DCMAKE_C_COMPILER=clang-14 \ 
@@ -44,8 +43,7 @@ sudo ninja install # install
  -DBUILD_SHARED_LIBS=ON
 ```
 
-> To build static libraries, use the following `cmake` command:  
-> ( **This will generate libraries that can be linked into shared libraries / normal program** )
+* To build static libraries, use the following `cmake` command ( **this will generate libraries that can be linked into shared libraries / normal program** ) :  
 
 ```shell
 cmake .. -GNinja -DCMAKE_C_COMPILER=clang-14 \
@@ -54,6 +52,14 @@ cmake .. -GNinja -DCMAKE_C_COMPILER=clang-14 \
 -DLIB_PROTO_MUTATOR_DOWNLOAD_PROTOBUF=ON \
 -DCMAKE_C_FLAGS="-fPIC" -DCMAKE_CXX_FLAGS="-fPIC"
 ```
+
+After building successfully, you can go to the `build` directory, and use the following command to check if the library is built correctly :  
+```shell
+# Check if libprotobuf-mutator.so.0 exist
+# To check other libraries just change the library name
+find . | grep "libprotobuf-mutator.so.0"
+```
+
 ## How to upgrade the environment  
 * Upgrade Clang/LLVM & libfuzzer ( install a new version ) 
 * Upgrade AFL++ ( git pull & rebuild )  
