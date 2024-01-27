@@ -30,7 +30,7 @@ mkdir build
 cd build
 ( A cmake command, check the below section )
 ninja # build the libraries
-sudo ninja install # install the libraries
+sudo ninja install # install the libraries ( optional )
 ```
 About `cmake` command :  
 * Use the following cmake command to build `libprotobuf-mutator-libfuzzer.so.0` and `libprotobuf-mutator.so.0` shared library :
@@ -43,7 +43,7 @@ About `cmake` command :
  -DBUILD_SHARED_LIBS=ON
 ```
 
-* To build static libraries, use the following `cmake` command ( **this will generate libraries that can be linked into shared libraries / normal program** ) :  
+* To build static libraries ( `libprotobuf-mutator-libfuzzer.a` and `libprotobuf-mutator.a` ), use the following `cmake` command ( **this will generate libraries that can be linked into shared libraries / normal program** ) :  
 
 ```shell
 cmake .. -GNinja -DCMAKE_C_COMPILER=clang-14 \
