@@ -5,7 +5,8 @@ Learn how to combine libprotobuf-mutator with libfuzzer &amp; AFL++
 * Ubuntu Linux 22.04 64 bit  
 * Clang 14.0.0
 * libprotobuf-mutator 3.21.7 [(af3bb1)](https://github.com/google/libprotobuf-mutator/tree/af3bb18749db3559dc4968dd85319d05168d4b5e)
-    - As of 2023/12/01, this repo won't work with the latest libprotobuf-mutator. It is recommended to switch to commit `af3bb1` before compile & installing the libraries ( [reference](https://github.com/google/libprotobuf-mutator/issues/223) ).
+> [!IMPORTANT]
+> As of 2023/12/01, this repo won't work with the latest libprotobuf-mutator. It is recommended to switch to commit `af3bb1` before compile & installing the libraries ( [reference](https://github.com/google/libprotobuf-mutator/issues/223) ).
 * AFL++ 4.09a [(61e27c)](https://github.com/AFLplusplus/AFLplusplus/tree/61e27c6b54f7641a168b6acc6ecffb1754c10918)    
 
 ### Install Clang/LLVM & libfuzzer  
