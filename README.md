@@ -37,10 +37,10 @@ About `cmake` command :
 * Use the following cmake command to build `libprotobuf-mutator-libfuzzer.so.0` and `libprotobuf-mutator.so.0` shared library :
 
 ```shell
- cmake .. -GNinja -DCMAKE_C_COMPILER=clang-14 \ 
- -DCMAKE_CXX_COMPILER=clang++-14 \ 
- -DCMAKE_BUILD_TYPE=Debug \ 
- -DLIB_PROTO_MUTATOR_DOWNLOAD_PROTOBUF=ON \ 
+ cmake .. -GNinja -DCMAKE_C_COMPILER=clang-14 \
+ -DCMAKE_CXX_COMPILER=clang++-14 \
+ -DCMAKE_BUILD_TYPE=Debug \
+ -DLIB_PROTO_MUTATOR_DOWNLOAD_PROTOBUF=ON \
  -DBUILD_SHARED_LIBS=ON
 ```
 
